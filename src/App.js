@@ -5,10 +5,12 @@ import "./App.css";
 
 export default function App() {
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
+  // NOTE: currentTestimonialIndex refers to the grouped testimonial slide index
   const [currentTestimonialIndex, setCurrentTestimonialIndex] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   const events = [
     { 
@@ -57,36 +59,79 @@ export default function App() {
     { text: "Top notch service.", author: "Florence Waweru" },
   ];
 
+  // ---- Group testimonials: short ones paired, long ones solo ----
+  // threshold controls what counts as "long" (adjust 120 if you'd like)
+  const LONG_THRESHOLD = 120;
+  const groupedTestimonials = [];
+  let tempGroup = [];
+
+  testimonials.forEach((t) => {
+    const isLong = t.text.length > LONG_THRESHOLD;
+    if (isLong) {
+      // flush any pending short group
+      if (tempGroup.length > 0) {
+        groupedTestimonials.push([...tempGroup]);
+        tempGroup = [];
+      }
+      // long stands alone
+      groupedTestimonials.push([t]);
+    } else {
+      tempGroup.push(t);
+      if (tempGroup.length === 2) {
+        groupedTestimonials.push([...tempGroup]);
+        tempGroup = [];
+      }
+    }
+  });
+  if (tempGroup.length > 0) groupedTestimonials.push([...tempGroup]);
+  // --------------------------------------------------------------
+
+  // Pause toggle (click slideshow or testimonials area to pause/resume)
+  const togglePause = () => setPaused(prev => !prev);
+
+  // Ensure no duplicate intervals: single useEffect to manage both timers
   useEffect(() => {
+    // smooth anchor link behaviour (unchanged)
     const links = document.querySelectorAll('a[href^="#"]');
     links.forEach(link => {
       link.addEventListener("click", e => {
         e.preventDefault();
         setMobileMenuOpen(false);
         const target = document.querySelector(link.getAttribute("href"));
-        if (target) {
-          target.scrollIntoView({ behavior: "smooth" });
-        }
+        if (target) target.scrollIntoView({ behavior: "smooth" });
       });
     });
 
+    // events interval (8s)
     const eventInterval = setInterval(() => {
-      setCurrentEventIndex(prev => (prev + 1) % events.length);
-    }, 6000);
+      if (!paused) {
+        setCurrentEventIndex(prev => (prev + 1) % events.length);
+      }
+    }, 8000);
 
+    // testimonials interval (8s) - cycles grouped testimonials
     const testimonialInterval = setInterval(() => {
-      setCurrentTestimonialIndex(prev => (prev + 1) % testimonials.length);
-    }, 6000);
+      if (!paused) {
+        setCurrentTestimonialIndex(prev => (prev + 1) % groupedTestimonials.length);
+      }
+    }, 8000);
 
     return () => {
       clearInterval(eventInterval);
       clearInterval(testimonialInterval);
     };
-  }, []);
+    // groupedTestimonials.length included because it may change if testimonials data changes
+  }, [paused, events.length, groupedTestimonials.length]);
 
-  const nextEvent = () => setCurrentEventIndex((prev) => (prev + 1) % events.length);
-  const prevEvent = () => setCurrentEventIndex((prev) => (prev - 1 + events.length) % events.length);
+  // Event prev/next (manual controls)
+  const nextEvent = () => {
+    setCurrentEventIndex((prev) => (prev + 1) % events.length);
+  };
+  const prevEvent = () => {
+    setCurrentEventIndex((prev) => (prev - 1 + events.length) % events.length);
+  };
 
+  // Modal controls
   const openModal = (event, imageIndex = 0) => {
     setSelectedEvent(event);
     setSelectedImageIndex(imageIndex);
@@ -111,15 +156,22 @@ export default function App() {
     }
   };
 
+  // Helper to open modal without toggling slideshow pause (stop propagation)
+  const handleImageClick = (e, event, i) => {
+    e.stopPropagation(); // prevents click from toggling pause on parent slideshow
+    openModal(event, i);
+  };
+
+  // Render
   return (
     <div className="app">
       {/* Navbar */}
       <nav className="navbar">
         <div className="navbar-brand">
           <div className="logo">
-            <img src="assets/Logo 3.png" alt="Ivory Bloom Logo" />
+            <img src="assets/logo 1.jpg" alt="Ivory Bloom Logo" />
           </div>
-          <h1>Ivory Bloom</h1>
+          <h1><b>Ivory Bloom</b></h1>
         </div>
         
         <button 
@@ -145,7 +197,7 @@ export default function App() {
           <h2>Premium Event Rentals, Planning and Decor Services</h2>
           <p>For corporate, family and all celebratory events</p>
           <div className="hero-buttons">
-            <a href="#events" className="btn btn-gold">Our Events</a>
+            <a href="#events" className="btn btn-gold">Our Services</a>
             <a href="#contact" className="btn btn-green">Get a Quote</a>
           </div>
         </div>
@@ -157,10 +209,11 @@ export default function App() {
       {/* Events Slideshow */}
       <section id="events" className="events">
         <div className="container">
-          <h2 style={{textAlign: "center"}}>Our Events</h2>
+          <h2 style={{textAlign: "center"}}>Our Services</h2>
 
           <div className="events-wrapper">
-            <div className="slideshow">
+            {/* clicking the slideshow toggles pause/resume */}
+            <div className="slideshow" onClick={togglePause}>
               {events.map((event, index) => (
                 <article
                   key={index}
@@ -172,7 +225,7 @@ export default function App() {
                       <div 
                         key={i} 
                         className="event-image-wrapper"
-                        onClick={() => openModal(event, i)}
+                        onClick={(e) => handleImageClick(e, event, i)}
                         role="button"
                         tabIndex={0}
                         onKeyPress={(e) => e.key === 'Enter' && openModal(event, i)}
@@ -200,19 +253,20 @@ export default function App() {
               ))}
             </div>
 
-            <button onClick={prevEvent} className="slider-btn slider-btn-left" aria-label="Previous service">
+            <button onClick={(e) => { e.stopPropagation(); prevEvent(); }} className="slider-btn slider-btn-left" aria-label="Previous service">
               <FaChevronLeft size={20} />
             </button>
 
-            <button onClick={nextEvent} className="slider-btn slider-btn-right" aria-label="Next service">
+            <button onClick={(e) => { e.stopPropagation(); nextEvent(); }} className="slider-btn slider-btn-right" aria-label="Next service">
               <FaChevronRight size={20} />
             </button>
 
+            {/* Dots kept only for events */}
             <div className="slider-dots">
               {events.map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => setCurrentEventIndex(index)}
+                  onClick={(e) => { e.stopPropagation(); setCurrentEventIndex(index); }}
                   className={`dot ${currentEventIndex === index ? 'active' : ''}`}
                   aria-label={`Go to service ${index + 1}`}
                 />
@@ -302,30 +356,25 @@ export default function App() {
       {/* Testimonials */}
       <section id="testimonials" className="testimonials">
         <div className="container">
-          <h2>What Our Clients Say</h2>
-          <div className="testimonials-wrapper">
-            {testimonials.map((testimonial, index) => (
+          <h2 style={{ textAlign: "center" }}>What Our Clients Say</h2>
+
+          {/* clicking the testimonials wrapper toggles pause/resume */}
+          <div className="testimonials-wrapper" onClick={togglePause}>
+            {groupedTestimonials.map((group, index) => (
               <div
                 key={index}
-                className={`testimonial-slide ${index === currentTestimonialIndex ? 'active' : ''}`}
+                className={`testimonial-slide ${index === currentTestimonialIndex ? "active" : ""}`}
               >
-                <div className="testimonial-card">
-                  <p className="testimonial-text">"{testimonial.text}"</p>
-                  <p className="testimonial-author">— {testimonial.author}</p>
+                <div className={`testimonial-group ${group.length === 1 ? "single" : "pair"}`}>
+                  {group.map((testimonial, i) => (
+                    <div key={i} className="testimonial-card">
+                      <p className="testimonial-text">"{testimonial.text}"</p>
+                      <p className="testimonial-author">— {testimonial.author}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}
-
-            <div className="slider-dots">
-              {testimonials.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentTestimonialIndex(index)}
-                  className={`dot ${currentTestimonialIndex === index ? 'active' : ''}`}
-                  aria-label={`Go to testimonial ${index + 1}`}
-                />
-              ))}
-            </div>
           </div>
         </div>
       </section>
@@ -342,9 +391,18 @@ export default function App() {
       </section>
 
       {/* Footer */}
-      {/* Footer */}
       <footer className="footer">
-        <p>&copy; 2025 Ivory Bloom Kenya. All rights reserved. | Premium Event Planning & Decor Services</p>
+        <div className="footer-content">
+          <img 
+            src="assets/logo 1.jpg" 
+            alt="Ivory Bloom Logo" 
+            className="footer-logo" 
+          />
+          <div className="footer-text">
+            <p>Premium Event Planning & Decor Services</p>
+            <p>&copy; 2025 Ivory Bloom Kenya. All rights reserved.</p>
+          </div>
+        </div>
         <span className="footer-credit">
           Designed & Developed by <a href="https://lnk.ink/Sr-portfolio" target="_blank" rel="noopener noreferrer"><b>Sylvia Rwenyo</b></a>
         </span>
