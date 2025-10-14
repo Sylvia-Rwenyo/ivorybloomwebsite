@@ -142,7 +142,7 @@ export default function App() {
       <section id="home" className="hero">
         <div className="hero-content">
           <h1>Welcome to Ivory Bloom</h1>
-          <h2 style={{textAlign: "left"}}>Premium Event Rentals, Planning and Decor Services</h2>
+          <h2>Premium Event Rentals, Planning and Decor Services</h2>
           <p>For corporate, family and all celebratory events</p>
           <div className="hero-buttons">
             <a href="#events" className="btn btn-gold">Our Events</a>
@@ -157,7 +157,7 @@ export default function App() {
       {/* Events Slideshow */}
       <section id="events" className="events">
         <div className="container">
-          <h2>Our Events</h2>
+          <h2 style={{textAlign: "center"}}>Our Events</h2>
 
           <div className="events-wrapper">
             <div className="slideshow">
