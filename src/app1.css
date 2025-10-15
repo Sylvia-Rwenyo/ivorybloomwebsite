@@ -6,7 +6,7 @@
 :root {
   --green: rgb(80, 200, 120);
   --ivory-white: rgb(255, 255, 227);
-  --champagne-gold: rgb(212, 175, 55);
+  --champagne-gold: #C9A961;
   --text-dark: #2c2c2c;
   --text-gray: #555;
   --bg-light: rgb(255, 255, 227, 0.75);
@@ -130,76 +130,73 @@ section h2 {
 
 /* ========== HERO ========== */
 .hero {
+  position: relative; 
   display: flex;
   align-items: center;
-  justify-content: space-around;
-  padding: 3rem 2rem;
-  gap: 1rem;
-  min-height: 70vh;
+  justify-content: center;
+  padding: 4rem 2rem;
+  min-height: 87vh;
+  background-image: url('../public/assets/event3.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  overflow: hidden;
+  background-color: transparent;
+}
+
+.hero::before,
+.hero::after {
+  display: none !important;
 }
 
 .hero-content {
-  max-width: 550px;
-  flex: 1;
+  max-width: 900px;
   position: relative;
-  min-height: 50vh;
+  z-index: 3;
+  text-align: center;
+  padding: 2rem;
 }
 
 .hero-content h1 {
-  font-size: clamp(3.5rem, 4.5vw, 3.5rem);
+  font-size: clamp(3rem, 6vw, 5rem);
   font-weight: 900;
-  color: #058743;
-  margin-bottom: 0.75rem;
-  line-height: 1.2;
-
+  color: #5C4416;
+  margin-bottom: 1rem;
+  line-height: 1.15;
+  text-shadow: 2px 2px 8px rgba(255, 255, 255, 0.5), 
+               1px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .hero-content h2 {
-  font-size: clamp(1.75rem, 2.75vw, 2rem);
-  color: var(--text-dark);
-  margin-bottom: 0.5rem;
-  line-height: 1.4;
+  font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+  color: #4A3510;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
   font-weight: 600;
+  text-shadow: 1px 1px 6px rgba(255, 255, 255, 0.6),
+               1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .hero-content p {
-  font-size: clamp(1.3rem, 1.75vw, 1.3rem);
-  color: var(--text-gray);
-  margin-bottom: 1.5rem;
-  line-height: 1.6;
+  font-size: clamp(1.15rem, 2.25vw, 1.6rem);
+  color: #3D2C0F;
+  margin-bottom: 2rem;
+  line-height: 1.65;
+  text-shadow: 1px 1px 4px rgba(255, 255, 255, 0.7);
+  max-width: 750px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .hero-buttons {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  gap: 2rem;
+  justify-content: center;
+  gap: 1.5rem;
   flex-wrap: wrap;
-  margin-top: 2.5rem;
-  position: absolute;
-  bottom: 1em;
-  width: 100%;
+  margin-top: 3.5rem;
 }
 
-.hero-image-container {
-  flex: 1;
-  min-width: 280px;
-  max-width: 500px;
-}
-
-.hero-image-container img {
-  width: 100%;
-  height: auto;
-  max-height: 450px;
-  object-fit: cover;
-  border-radius: 20px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-  transition: transform 0.3s ease;
-}
-
-.hero-image-container img:hover {
-  transform: scale(1.02);
-}
 
 /* ========== BUTTONS ========== */
 .btn {
@@ -295,7 +292,7 @@ section h2 {
 .event-slide h3 {
   font-size: clamp(1.75rem, 3vw, 2rem);
   font-weight: 900;
-  color: var(--champagne-gold);
+  color: #B8860B;
   margin-bottom: 1.5rem;
   text-align: center;
 }
@@ -710,7 +707,7 @@ section h2 {
 
 /* ========== TESTIMONIALS ========== */
 .testimonials {
-  background-color: var(--bg-light);
+  background-color: #FFF8E7;
 }
 
 .testimonials-wrapper {
@@ -736,7 +733,7 @@ section h2 {
 }
 
 .testimonial-card {
-  background-color: rgb(255, 255, 240);
+  background-color: rgb(255, 255, 255);
   padding: clamp(1.75rem, 5vw, 2.5rem);
   border-radius: 20px;
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
@@ -807,12 +804,28 @@ section h2 {
 /* ========== CONTACT ========== */
 .contact {
   text-align: center;
-  background-color: white;
+  background-image: url('../public/assets/event3.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  overflow: hidden;
+  position: relative; 
+}
+
+.contact .container{
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(2px);
+    border-radius: 30px;
+     max-width: 650px;
 }
 
 .contact p {
   font-size: clamp(1.5rem, 2vw, 1.7rem);
-  color: var(--text-gray);
+  color: #6B5416;
   margin-bottom: 2rem;
   max-width: 650px;
   margin-left: auto;
@@ -829,7 +842,7 @@ section h2 {
   text-align: center;
   padding: 2rem 1.5rem 3rem;
   position: relative;
-  height: auto; /* allows flexible height based on content */
+  height: auto;
 }
 
 .footer-content {
@@ -918,7 +931,12 @@ section h2 {
   }
   
   .hero {
-    padding: 2.5rem 1.5rem;
+    padding: 3rem 1.5rem;
+    min-height: 85vh;
+  }
+
+  .hero-content {
+    padding: 1.75rem;
   }
 
   .modal-body {
@@ -1001,27 +1019,32 @@ section h2 {
   }
 
   .hero {
-    flex-direction: column;
-    text-align: center;
-    padding: 2rem 1.25rem;
-    min-height: auto;
+    padding: 3rem 1.5rem;
+    min-height: 80vh;
+    background-attachment: scroll;
   }
 
   .hero-content {
     max-width: 100%;
+    padding: 1.5rem;
+  }
+
+  .hero-content h1 {
+    font-size: clamp(2.5rem, 8vw, 3.5rem);
+  }
+
+  .hero-content h2 {
+    font-size: clamp(1.3rem, 5vw, 2rem);
+  }
+
+  .hero-content p {
+    font-size: clamp(1rem, 3.5vw, 1.3rem);
+    margin-bottom: 1.5rem;
   }
 
   .hero-buttons {
-    justify-content: center;
-  }
-
-  .hero-image-container {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .hero-image-container img {
-    max-height: 350px;
+    gap: 1rem;
+    margin-top: 1.5rem;
   }
 
   .events-wrapper {
@@ -1122,6 +1145,40 @@ section h2 {
 
 /* Small mobile */
 @media (max-width: 480px) {
+  .hero {
+    padding: 2.5rem 1rem;
+    min-height: 75vh;
+  }
+
+  .hero-content {
+    padding: 1.25rem;
+    border-radius: 20px;
+  }
+
+  .hero-content h1 {
+    font-size: clamp(2rem, 9vw, 3rem);
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-content h2 {
+    font-size: clamp(1.1rem, 5.5vw, 1.75rem);
+  }
+
+  .hero-content p {
+    font-size: clamp(0.95rem, 4vw, 1.2rem);
+    line-height: 1.55;
+  }
+
+  .hero-buttons {
+    gap: 0.875rem;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-buttons .btn {
+    width: 100%;
+  }
+
   .navbar-brand h1 {
     font-size: 1.1rem;
   }

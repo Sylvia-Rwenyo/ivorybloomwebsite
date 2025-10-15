@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Menu, X, ZoomIn } from "lucide-react";
 import { FaWhatsapp, FaEnvelope, FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import "./App.css";
+import "./app1.css";
 
 export default function App() {
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
@@ -200,9 +200,6 @@ export default function App() {
             <a href="#events" className="btn btn-gold">Our Services</a>
             <a href="#contact" className="btn btn-green">Get a Quote</a>
           </div>
-        </div>
-        <div className="hero-image-container">
-          <img src="/assets/meetandgreetevent3.jpeg" alt="Elegant Event Setup by Ivory Bloom Kenya" />
         </div>
       </section>
 
