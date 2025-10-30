@@ -5,7 +5,6 @@ import "./App.css";
 
 export default function App() {
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
-  // NOTE: currentTestimonialIndex refers to the grouped testimonial slide index
   const [currentTestimonialIndex, setCurrentTestimonialIndex] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -26,14 +25,20 @@ export default function App() {
       images: ["/assets/birthday.jpeg", "/assets/birthday2.jpeg"]
     },
     { 
-      name: "Corporate Launches", 
-      description: "Make your corporate events memorable with our professional planning and sophisticated decor. We specialize in product launches, conferences, and corporate celebrations.",
-      services: ["Product Launches", "Corporate Conferences", "Brand Activations", "Networking Events"],
-      images: ["/assets/kottetevent1.jpeg", "/assets/kottetevent2.jpeg", "/assets/booklauch.jpeg"]
+      name: "Entrance Balloon Arches", 
+      description: "Make every entrance unforgettable with an arc that radiates celebration and warmth.",
+      services: ["Product Launches", "Corporate Diners", "Networking Events"],
+      images: ["/assets/kottetevent1.jpeg"]
+    },
+    {
+      name: "Custom Backdrops & Seating Arrangements", 
+      description: "Elegant backdrop for timeless moments, perfect for corporate events and celebrations. Sets the tone for sophistication - perfect for alumni and corporate gatherings.",
+      services: ["Brand Activations", "Product Launches", "Corporate Events"],
+      images: ["/assets/kottetevent2.jpeg", "/assets/booklauch.jpeg"]
     },
     { 
-      name: "Custom Event Backdrops", 
-      description: "Create stunning focal points with our custom-designed backdrops. Perfect for photo opportunities, stage settings, and branded displays.",
+      name: "Kids Party Setup", 
+      description: "Whimsical charm for little hearts. Bring joy to every corner with pastel balloon magic for your child's special day.",
       services: ["Floral Backdrops", "Branded Backdrops", "Photo Booth Setups", "Stage Design"],
       images: ["/assets/newbirthday.jpeg"]
     },
@@ -59,8 +64,7 @@ export default function App() {
     { text: "Top notch service.", author: "Florence Waweru" },
   ];
 
-  // ---- Group testimonials: short ones paired, long ones solo ----
-  // threshold controls what counts as "long" (adjust 120 if you'd like)
+  // Group testimonials: short ones paired, long ones solo
   const LONG_THRESHOLD = 120;
   const groupedTestimonials = [];
   let tempGroup = [];
@@ -68,12 +72,10 @@ export default function App() {
   testimonials.forEach((t) => {
     const isLong = t.text.length > LONG_THRESHOLD;
     if (isLong) {
-      // flush any pending short group
       if (tempGroup.length > 0) {
         groupedTestimonials.push([...tempGroup]);
         tempGroup = [];
       }
-      // long stands alone
       groupedTestimonials.push([t]);
     } else {
       tempGroup.push(t);
@@ -84,14 +86,13 @@ export default function App() {
     }
   });
   if (tempGroup.length > 0) groupedTestimonials.push([...tempGroup]);
-  // --------------------------------------------------------------
 
-  // Pause toggle (click slideshow or testimonials area to pause/resume)
+ 
+
+ 
   const togglePause = () => setPaused(prev => !prev);
 
-  // Ensure no duplicate intervals: single useEffect to manage both timers
   useEffect(() => {
-    // smooth anchor link behaviour (unchanged)
     const links = document.querySelectorAll('a[href^="#"]');
     links.forEach(link => {
       link.addEventListener("click", e => {
@@ -102,14 +103,12 @@ export default function App() {
       });
     });
 
-    // events interval (8s)
     const eventInterval = setInterval(() => {
       if (!paused) {
         setCurrentEventIndex(prev => (prev + 1) % events.length);
       }
     }, 8000);
 
-    // testimonials interval (8s) - cycles grouped testimonials
     const testimonialInterval = setInterval(() => {
       if (!paused) {
         setCurrentTestimonialIndex(prev => (prev + 1) % groupedTestimonials.length);
@@ -120,18 +119,16 @@ export default function App() {
       clearInterval(eventInterval);
       clearInterval(testimonialInterval);
     };
-    // groupedTestimonials.length included because it may change if testimonials data changes
   }, [paused, events.length, groupedTestimonials.length]);
 
-  // Event prev/next (manual controls)
   const nextEvent = () => {
     setCurrentEventIndex((prev) => (prev + 1) % events.length);
   };
+  
   const prevEvent = () => {
     setCurrentEventIndex((prev) => (prev - 1 + events.length) % events.length);
   };
 
-  // Modal controls
   const openModal = (event, imageIndex = 0) => {
     setSelectedEvent(event);
     setSelectedImageIndex(imageIndex);
@@ -156,13 +153,11 @@ export default function App() {
     }
   };
 
-  // Helper to open modal without toggling slideshow pause (stop propagation)
   const handleImageClick = (e, event, i) => {
-    e.stopPropagation(); // prevents click from toggling pause on parent slideshow
+    e.stopPropagation();
     openModal(event, i);
   };
 
-  // Render
   return (
     <div className="app">
       {/* Navbar */}
@@ -190,15 +185,23 @@ export default function App() {
         </ul>
       </nav>
 
+<div className="flower-frame"></div>
+
+      
       {/* Hero Section */}
       <section id="home" className="hero">
         <div className="hero-content">
-          <h1>Welcome to Ivory Bloom</h1>
-          <h2>Premium Event Rentals, Planning and Decor Services</h2>
+          <h1>
+            {/* Welcome to <br></br> */}
+            <span>Ivory Bloom</span></h1>
+          <h2>
+            Premium Event <span></span> Rentals Planning <span></span> Decor Services
+          </h2>
+
           <p>For corporate, family and all celebratory events</p>
           <div className="hero-buttons">
             <a href="#events" className="btn btn-gold">Our Services</a>
-            <a href="#contact" className="btn btn-green">Get a Quote</a>
+            <a href="#contact" className="btn btn-roseGold">Get a Quote</a>
           </div>
         </div>
         <div className="hero-image-container">
@@ -208,11 +211,11 @@ export default function App() {
 
       {/* Events Slideshow */}
       <section id="events" className="events">
+        
+        
         <div className="container">
           <h2 style={{textAlign: "center"}}>Our Services</h2>
-
           <div className="events-wrapper">
-            {/* clicking the slideshow toggles pause/resume */}
             <div className="slideshow" onClick={togglePause}>
               {events.map((event, index) => (
                 <article
@@ -261,7 +264,6 @@ export default function App() {
               <FaChevronRight size={20} />
             </button>
 
-            {/* Dots kept only for events */}
             <div className="slider-dots">
               {events.map((_, index) => (
                 <button
@@ -283,6 +285,10 @@ export default function App() {
             <button className="modal-close" onClick={closeModal} aria-label="Close modal">
               <X size={28} />
             </button>
+
+             <div className="modal-header">
+              <h3>{selectedEvent.name}</h3>
+            </div>
             
             <div className="modal-body">
               <div className="modal-gallery">
@@ -330,7 +336,6 @@ export default function App() {
               </div>
 
               <div className="modal-info">
-                <h3>{selectedEvent.name}</h3>
                 <p className="modal-description">{selectedEvent.description}</p>
                 
                 <div className="modal-services">
@@ -355,10 +360,10 @@ export default function App() {
 
       {/* Testimonials */}
       <section id="testimonials" className="testimonials">
+        
         <div className="container">
           <h2 style={{ textAlign: "center" }}>What Our Clients Say</h2>
 
-          {/* clicking the testimonials wrapper toggles pause/resume */}
           <div className="testimonials-wrapper" onClick={togglePause}>
             {groupedTestimonials.map((group, index) => (
               <div
@@ -381,6 +386,7 @@ export default function App() {
 
       {/* Contact Section */}
       <section id="contact" className="contact">
+        
         <div className="container">
           <h2>Get in Touch</h2>
           <p>Ready to make your event unforgettable? Reach us anytime for collaborations or bookings.</p>
@@ -389,6 +395,8 @@ export default function App() {
           </a>
         </div>
       </section>
+
+      {/* </main> */}
 
       {/* Footer */}
       <footer className="footer">
@@ -423,6 +431,7 @@ export default function App() {
           href="mailto:ivorybloomkenya@gmail.com" 
           className="floating-btn email"
           aria-label="Email us"
+          style={{ color: "#555" }}
         >
           <FaEnvelope />
         </a>
