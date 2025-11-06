@@ -1,70 +1,99 @@
 import { useEffect, useState } from "react";
-import { Menu, X, ZoomIn } from "lucide-react";
+import { Menu, X, ZoomIn, Calendar, Layers, PartyPopper, Tent, Sparkles, ShoppingBag , Expand} from "lucide-react";
 import { FaWhatsapp, FaEnvelope, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import "./App.css";
 
+// API Configuration
+const API_BASE_URL = "https://ivorybloom.co.ke/public/cms/api"; 
+
+
 export default function App() {
-  const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const [currentTestimonialIndex, setCurrentTestimonialIndex] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [paused, setPaused] = useState(false);
-
-  const events = [
-    { 
-      name: "Event Planning & Coordination", 
-      description: "From intimate gatherings to grand celebrations, we handle every detail of your event with precision and creativity. Our experienced team ensures seamless execution from concept to completion.",
-      services: ["Full Event Planning", "Day-of Coordination", "Vendor Management"],
-      images: ["/assets/meetandgreetevent1.jpeg", "/assets/meetandgreetevent2.jpeg", "/assets/meetandgreetevent3.jpeg"]
-    },
-    { 
-      name: "Tent & Event Rentals", 
-      description: "Transform any space into your dream venue with our premium tent and furniture rentals. We provide elegant, high-quality equipment for events of all sizes.",
-      services: ["Tent Rentals", "Table & Chair Rentals", "Lighting Solutions", "Outdoor Setup"],
-      images: ["/assets/birthday.jpeg", "/assets/birthday2.jpeg"]
-    },
-    { 
-      name: "Entrance Balloon Arches", 
-      description: "Make every entrance unforgettable with an arc that radiates celebration and warmth.",
-      services: ["Product Launches", "Corporate Diners", "Networking Events"],
-      images: ["/assets/kottetevent1.jpeg"]
-    },
-    {
-      name: "Custom Backdrops & Seating Arrangements", 
-      description: "Elegant backdrop for timeless moments, perfect for corporate events and celebrations. Sets the tone for sophistication - perfect for alumni and corporate gatherings.",
-      services: ["Brand Activations", "Product Launches", "Corporate Events"],
-      images: ["/assets/kottetevent2.jpeg", "/assets/booklauch.jpeg"]
-    },
-    { 
-      name: "Kids Party Setup", 
-      description: "Whimsical charm for little hearts. Bring joy to every corner with pastel balloon magic for your child's special day.",
-      services: ["Floral Backdrops", "Branded Backdrops", "Photo Booth Setups", "Stage Design"],
-      images: ["/assets/newbirthday.jpeg"]
-    },
-    { 
-      name: "Custom Balloon Garlands", 
-      description: "Add whimsy and elegance to your celebration with our artistic balloon installations. From organic garlands to elaborate arches, we bring color and joy to every event.",
-      services: ["Balloon Garlands", "Balloon Arches", "Balloon Columns", "Custom Color Schemes"],
-      images: ["/assets/babyshower1.jpeg", "/assets/babyshower2.jpeg"]
-    },
-    { 
-      name: "Custom Branded Merchandise", 
-      description: "Elevate your brand with custom merchandise that leaves a lasting impression. From promotional items to event swag, we create quality products that represent your brand.",
-      services: ["Custom Apparel", "Promotional Items", "Event Bags", "Branded Gifts"],
-      images: ["/assets/kottet merch.mp4"],
-      isVideo: true
-    }
+  const [services, setServices] = useState([]);
+  const ourServices = [
+    { name: "Event Planning & Coordination", icon: Calendar },
+    { name: "Custom Event Backdrops", icon: Layers },
+    { name: "Balloon Garlands", icon: PartyPopper },
+    { name: "Tent & Event Rentals", icon: Tent },
+    { name: "Event Décor", icon: Sparkles },
+    { name: "Branded Merchandise", icon: ShoppingBag },
   ];
+  
+  // State for API data
+  const [events, setEvents] = useState([]);
+  const [testimonials, setTestimonials] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const testimonials = [
-    { text: "Well done on our High School Alumni event decor.", author: "Phyllis Musau" },
-    { text: "World class customer experience MaryAnne and team. Not just like any other plug, the attention to detail and customer service is just out of this world.", author: "Stephen Mwaganu" },
-    { text: "They do a great job, decor is on point and make the whole setup look vibrant! Impeccable customer experience as well 😃 Highly recommended.", author: "Titus Kamwira" },
-    { text: "Top notch service.", author: "Florence Waweru" },
-  ];
+  // Fetch events from API
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/events.php`);
+        const data = await response.json();
+        
+        if (data.success) {
+          // Transform API data to match component structure
+          const transformedEvents = data.events.map(event => ({
+            name: event.name,
+            description: event.description,
+            services: event.services || [],
+            images: event.images.map(img => img.file_path),
+            isVideo: event.images.some(img => img.file_type === 'video')
+          }));
+          
+          setEvents(transformedEvents);
+          
+          // Extract unique services for the services section
+          const allServices = transformedEvents.flatMap(e => e.services);
+          const uniqueServices = [...new Set(allServices)];
+          setServices(uniqueServices);
+        } else {
+          setError(data.message);
+        }
+      } catch (err) {
+        console.error("Error fetching events:", err);
+        setError("Failed to load events");
+      }
+    };
 
-  // Group testimonials: short ones paired, long ones solo
+    fetchEvents();
+  }, []);
+
+  // Fetch testimonials from API
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/testimonials.php`);
+        const data = await response.json();
+        
+        if (data.success) {
+          // Transform API data to match component structure
+          const transformedTestimonials = data.testimonials.map(testimonial => ({
+            text: testimonial.testimonial_text,
+            author: testimonial.author_name
+          }));
+          
+          setTestimonials(transformedTestimonials);
+        } else {
+          setError(data.message);
+        }
+      } catch (err) {
+        console.error("Error fetching testimonials:", err);
+        setError("Failed to load testimonials");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTestimonials();
+  }, []);
+
+  // Group testimonials logic
   const LONG_THRESHOLD = 120;
   const groupedTestimonials = [];
   let tempGroup = [];
@@ -87,9 +116,6 @@ export default function App() {
   });
   if (tempGroup.length > 0) groupedTestimonials.push([...tempGroup]);
 
- 
-
- 
   const togglePause = () => setPaused(prev => !prev);
 
   useEffect(() => {
@@ -103,31 +129,16 @@ export default function App() {
       });
     });
 
-    const eventInterval = setInterval(() => {
-      if (!paused) {
-        setCurrentEventIndex(prev => (prev + 1) % events.length);
-      }
-    }, 8000);
-
     const testimonialInterval = setInterval(() => {
-      if (!paused) {
+      if (!paused && groupedTestimonials.length > 0) {
         setCurrentTestimonialIndex(prev => (prev + 1) % groupedTestimonials.length);
       }
     }, 8000);
 
     return () => {
-      clearInterval(eventInterval);
       clearInterval(testimonialInterval);
     };
-  }, [paused, events.length, groupedTestimonials.length]);
-
-  const nextEvent = () => {
-    setCurrentEventIndex((prev) => (prev + 1) % events.length);
-  };
-  
-  const prevEvent = () => {
-    setCurrentEventIndex((prev) => (prev - 1 + events.length) % events.length);
-  };
+  }, [paused, groupedTestimonials.length]);
 
   const openModal = (event, imageIndex = 0) => {
     setSelectedEvent(event);
@@ -153,10 +164,30 @@ export default function App() {
     }
   };
 
-  const handleImageClick = (e, event, i) => {
-    e.stopPropagation();
-    openModal(event, i);
-  };
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="app" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+        <div style={{ textAlign: 'center' }}>
+          <h2>Loading...</h2>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="app" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+        <div style={{ textAlign: 'center', color: 'red' }}>
+          <h2>Error</h2>
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+
 
   return (
     <div className="app">
@@ -179,28 +210,25 @@ export default function App() {
 
         <ul className={`navbar-menu ${mobileMenuOpen ? 'active' : ''}`}>
           <li><a href="#home">Home</a></li>
-          <li><a href="#events">Services</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#events">Gallery</a></li>
           <li><a href="#testimonials">Testimonials</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
       </nav>
 
-<div className="flower-frame"></div>
 
-      
       {/* Hero Section */}
       <section id="home" className="hero">
         <div className="hero-content">
-          <h1>
-            {/* Welcome to <br></br> */}
-            <span>Ivory Bloom</span></h1>
+          <h1>Ivory Bloom</h1>
           <h2>
-            Premium Event <span></span> Rentals Planning <span></span> Decor Services
+            Premium Rentals <span></span> Stylish Tents<span></span> Timeless Decor
           </h2>
 
-          <p>For corporate, family and all celebratory events</p>
+          <p>Event setup with lasting impressions ~ for corporate & private events in Nairobi.</p>
           <div className="hero-buttons">
-            <a href="#events" className="btn btn-gold">Our Services</a>
+            <a href="#services" className="btn btn-dark">Our Services</a>
             <a href="#contact" className="btn btn-roseGold">Get a Quote</a>
           </div>
         </div>
@@ -209,72 +237,72 @@ export default function App() {
         </div>
       </section>
 
-      {/* Events Slideshow */}
-      <section id="events" className="events">
-        
-        
+      {/* Services Section */}
+      <section id="services" className="services-section">
+        <div className="services-left">
+          <h2>Our Services</h2>
+          <p>
+            We plan and style events with elegance, tailoring each detail to fit the moment and your taste. 
+            Whether it's a baby shower, launch, or dinner, we make every occasion feel special.
+          </p>
+        </div>
+
+        <div className="services-grid">
+          {ourServices.map((service, index) => {
+            const IconComponent = service.icon;
+            return (
+              <div key={index} className="service-card">
+                <div className="service-icon">
+                  <IconComponent size={24} strokeWidth={1.5} />
+                </div>
+                <h3>{service.name}</h3>
+              </div>
+            );
+          })}
+        </div>
+          
+      </section>
+
+      {/* Events Gallery */}
+      <section id="events" className="events-gallery">
         <div className="container">
-          <h2 style={{textAlign: "center"}}>Our Services</h2>
-          <div className="events-wrapper">
-            <div className="slideshow" onClick={togglePause}>
-              {events.map((event, index) => (
-                <article
-                  key={index}
-                  className={`event-slide ${index === currentEventIndex ? 'active' : ''}`}
-                >
-                  <h3>{event.name}</h3>
-                  <div className={`event-images grid-${event.images.length}`}>
-                    {event.images.map((media, i) => (
-                      <div 
-                        key={i} 
-                        className="event-image-wrapper"
-                        onClick={(e) => handleImageClick(e, event, i)}
-                        role="button"
-                        tabIndex={0}
-                        onKeyPress={(e) => e.key === 'Enter' && openModal(event, i)}
-                      >
-                        {event.isVideo ? (
-                          <video 
-                            src={media} 
-                            alt={`${event.name} showcase`}
-                            loop
-                            muted
-                            autoPlay
-                            playsInline
-                          />
-                        ) : (
-                          <img src={media} alt={`${event.name} - ${i + 1}`} />
-                        )}
-                        <div className="image-overlay">
-                          <ZoomIn size={32} />
-                          <span>Click to view details</span>
-                        </div>
-                      </div>
-                    ))}
+          <h2>Curated Experiences</h2>
+          <p className="gallery-intro">Our portfolio of artfully styled moments</p>
+          
+          {events.length === 0 ? (
+            <p style={{ textAlign: 'center' }}>No events available at the moment.</p>
+          ) : (
+            <div className="gallery-grid">
+              {events.map((event, eventIndex) => (
+                event.images.map((media, imageIndex) => (
+                  <div 
+                    key={`${eventIndex}-${imageIndex}`}
+                    className="gallery-item"
+                    onClick={() => openModal(event, imageIndex)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyPress={(e) => e.key === 'Enter' && openModal(event, imageIndex)}
+                  >
+                    {event.isVideo ? (
+                      <video 
+                        src={media} 
+                        alt={`${event.name} showcase`}
+                        loop
+                        muted
+                        playsInline
+                      />
+                    ) : (
+                      <img src={media} alt={`${event.name}`} />
+                    )}
+                    <div className="gallery-overlay">
+                        <Expand size={32}  color="rgb(253, 246, 236)" />
+                      <span className="gallery-title">{event.name}</span>
+                    </div>
                   </div>
-                </article>
+                ))
               ))}
             </div>
-
-            <button onClick={(e) => { e.stopPropagation(); prevEvent(); }} className="slider-btn slider-btn-left" aria-label="Previous service">
-              <FaChevronLeft size={20} />
-            </button>
-
-            <button onClick={(e) => { e.stopPropagation(); nextEvent(); }} className="slider-btn slider-btn-right" aria-label="Next service">
-              <FaChevronRight size={20} />
-            </button>
-
-            <div className="slider-dots">
-              {events.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={(e) => { e.stopPropagation(); setCurrentEventIndex(index); }}
-                  className={`dot ${currentEventIndex === index ? 'active' : ''}`}
-                  aria-label={`Go to service ${index + 1}`}
-                />
-              ))}
-            </div>
-          </div>
+          )}
         </div>
       </section>
 
@@ -286,7 +314,7 @@ export default function App() {
               <X size={28} />
             </button>
 
-             <div className="modal-header">
+            <div className="modal-header">
               <h3>{selectedEvent.name}</h3>
             </div>
             
@@ -349,7 +377,7 @@ export default function App() {
                   </div>
                 </div>
 
-                <a href="#contact" className="btn btn-gold modal-cta" onClick={closeModal}>
+                <a href="#contact" className="btn btn-dark modal-cta" onClick={closeModal}>
                   Get a Quote
                 </a>
               </div>
@@ -360,43 +388,43 @@ export default function App() {
 
       {/* Testimonials */}
       <section id="testimonials" className="testimonials">
-        
         <div className="container">
           <h2 style={{ textAlign: "center" }}>What Our Clients Say</h2>
 
-          <div className="testimonials-wrapper" onClick={togglePause}>
-            {groupedTestimonials.map((group, index) => (
-              <div
-                key={index}
-                className={`testimonial-slide ${index === currentTestimonialIndex ? "active" : ""}`}
-              >
-                <div className={`testimonial-group ${group.length === 1 ? "single" : "pair"}`}>
-                  {group.map((testimonial, i) => (
-                    <div key={i} className="testimonial-card">
-                      <p className="testimonial-text">"{testimonial.text}"</p>
-                      <p className="testimonial-author">— {testimonial.author}</p>
-                    </div>
-                  ))}
+          {groupedTestimonials.length === 0 ? (
+            <p style={{ textAlign: 'center' }}>No testimonials available at the moment.</p>
+          ) : (
+            <div className="testimonials-wrapper" onClick={togglePause}>
+              {groupedTestimonials.map((group, index) => (
+                <div
+                  key={index}
+                  className={`testimonial-slide ${index === currentTestimonialIndex ? "active" : ""}`}
+                >
+                  <div className={`testimonial-group ${group.length === 1 ? "single" : "pair"}`}>
+                    {group.map((testimonial, i) => (
+                      <div key={i} className="testimonial-card">
+                        <p className="testimonial-text">"{testimonial.text}"</p>
+                        <p className="testimonial-author">— {testimonial.author}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
       {/* Contact Section */}
       <section id="contact" className="contact">
-        
         <div className="container">
-          <h2>Get in Touch</h2>
+            <h2>Get in Touch</h2>
           <p>Ready to make your event unforgettable? Reach us anytime for collaborations or bookings.</p>
-          <a href="mailto:ivorybloomkenya@gmail.com" className="btn btn-gold">
-            Email Us
+          <a href="https://wa.me/254716640973" className="btn btn-dark"  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', width: 'fit-content' }}>
+            Contact Us &nbsp; <FaWhatsapp />
           </a>
         </div>
       </section>
-
-      {/* </main> */}
 
       {/* Footer */}
       <footer className="footer">
@@ -437,5 +465,6 @@ export default function App() {
         </a>
       </div>
     </div>
+
   );
 }
