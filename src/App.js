@@ -4,7 +4,7 @@ import { FaWhatsapp, FaEnvelope, FaChevronLeft, FaChevronRight } from "react-ico
 import "./App.css";
 
 // API Configuration
-const API_BASE_URL = "https://ivorybloom.co.ke/public/cms/api"; 
+const API_BASE_URL = "https://ivorybloom.co.ke/cms/api"; 
 
 
 export default function App() {

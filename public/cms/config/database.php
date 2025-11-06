@@ -1,12 +1,11 @@
 <?php
 // Database Configuration
-// Place in: cms/config/database.php
 
 class Database {
     private $host = "localhost";
     private $db_name = "saqqaekn_ivorybloomdb";
-    private $username = "ivorybloomadminsaqqaekn_ivorybloomadmin";
-    private $password = "Y[L+80_!1RUaYW]w";
+    private $username = "saqqaekn_ivorybloomadmin";
+    private $password = "dBVkU{+~rpzen[oO";
     private $conn;
     
     public function getConnection() {
@@ -24,10 +23,21 @@ class Database {
                 )
             );
         } catch(PDOException $e) {
-            error_log("Connection error: " . $e->getMessage());
+            // Log to PHP error log
+            error_log("Database Connection Error: " . $e->getMessage());
+            error_log("Stack trace: " . $e->getTraceAsString());
+            
+            // Return detailed error in JSON (shows in browser console)
+            header('Content-Type: application/json');
+            http_response_code(500);
             die(json_encode([
                 'success' => false,
-                'message' => 'Database connection failed'
+                'message' => 'Database connection failed',
+                'error' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'host' => $this->host,
+                'database' => $this->db_name,
+                'trace' => $e->getTraceAsString()
             ]));
         }
         
