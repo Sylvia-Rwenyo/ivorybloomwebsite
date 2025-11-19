@@ -117,10 +117,10 @@ color: var(--light-cream);
 /* ========== SECTIONS ========== */
 section {
 padding: 3.5rem 1.5rem;
-position: relative;
+/* position: relative; */
 }
 section h2 {
-font-size: clamp(2rem, 4vw, 2.5rem);
+font-size: clamp(2rem, 4vw, 2.2rem);
 font-weight: 900;
 color: var(--pink);
 margin-bottom: 0.75rem;
@@ -171,7 +171,7 @@ min-height: 60vh;
 z-index: 2;
 }
 .hero-content h1 {
-font-size: clamp(8rem, 3.5vw, 8rem);
+font-size: clamp(7rem, 2.5vw, 7rem);
 font-weight: 900;
 letter-spacing: 1px;
 line-height: 1.2;
@@ -188,7 +188,7 @@ font-family: 'Alex brush', serif;
 text-align: center;
 }
 .hero-content h2 {
-  font-size: clamp(1.1rem, 1.5vw, 1.1rem);
+  font-size: clamp(0.9rem, 1vw, 0.9rem);
   color: var(--text-dark);
   margin-bottom: 3rem;
   line-height: 1.4;
@@ -234,7 +234,7 @@ cursor: pointer;
 transition: all 0.3s ease;
 }
 .hero-content p {
-font-size: clamp(1.2rem, 1.75vw, 1.2rem);
+font-size: clamp(1rem, 1.25vw, 1rem);
 color: darkslategray;
 margin-bottom: 1rem;
 font-weight: 500;
@@ -261,12 +261,17 @@ width: 100%;
 margin-left: 0%;
 }
 }
-@media screen and (max-width: 950px) {
+@media screen and (max-width: 1000px) {
 .hero-content h1 {
-font-size: clamp(6.5rem, 3.5vw, 6.5rem);
+font-size: clamp(6rem, 3vw, 6rem);
 }
 .hero-content p {
 font-size: clamp(1rem, 1.5vw, 1rem);
+}
+}
+@media screen and (max-width: 950px) {
+.hero-content h1 {
+font-size: clamp(5.5rem, 3vw, 5.5rem);
 }
 }
 .hero-image-container {
@@ -293,7 +298,7 @@ transform: scale(1.02);
 padding: 0.75rem 1.75rem;
 border: none;
 border-radius: 25px;
-font-size: 1.25rem;
+font-size: 1.1rem;
 font-weight: 500;
 cursor: pointer;
 transition: all 0.3s ease;
@@ -329,19 +334,18 @@ padding: 0 1.5rem;
 /* OUR SERVICES – Screenshot layout: intro LEFT, cards RIGHT */
 .services-section {
   background: rgb(255,255,250);
-  padding: 6rem 2rem;
+  padding: 6rem 6rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
   align-items: center;
-  width: 100%;
   margin: 0 auto;
 }
 .services-left {
   text-align: left;
 }
 .services-left h2 {
-  font-size: 2.4rem;
+  font-size: 2.2rem;
   font-weight: 700;
   color: var(--text-dark);
   margin: 0 0 1rem;
@@ -412,6 +416,7 @@ padding: 0 1.5rem;
 }
 @media (max-width: 600px) {
   .services-grid { grid-template-columns: 1fr; }
+  .services-left h2 { font-size: 1.5rem;}
 }
 
 /* EVENTS GALLERY */
@@ -533,7 +538,7 @@ padding: 0 1.5rem;
 
 .modal-header h3 {
   font-family: 'Cinzel', serif;
-  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  font-size: clamp(1.5rem, 3vw, 2rem);
   background: linear-gradient(135deg, var(--pink) 0%, var(--muted-purple) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -700,7 +705,7 @@ padding: 0 1.5rem;
 }
 
 /* Mobile adjustments */
-@media (max-width: 900px) {
+@media (max-width: 970px) {
   .modal-content {
     border-radius: 20px;
   }
@@ -725,25 +730,34 @@ padding: 0 1.5rem;
 /* ========== TESTIMONIALS ========== */
 .testimonials {
 background-color: rgb(255, 255, 250);
+min-height: 30vh;
+padding-bottom: 2rem;
+display: flex;
+flex-direction: column;
 }
 .testimonials-wrapper {
 max-width: 750px;
 margin: 0 auto;
 position: relative;
-min-height: 200px;
+min-height: 300px;
+height: auto;
+display: flex;
+align-items: stretch;
 }
 .testimonial-slide {
-position: absolute;
+position: relative;
 width: 100%;
-top: 0;
-left: 0;
+height: auto;
 opacity: 0;
 transition: opacity 1s ease-in-out;
 pointer-events: none;
+display: none;
 }
 .testimonial-slide.active {
 opacity: 1;
 pointer-events: auto;
+display: block;
+position: relative;
 }
 .testimonial-card {
 background-color: rgb(255, 255, 240);
@@ -785,14 +799,18 @@ justify-content: center;
 align-items: stretch;
 gap: 1.5rem;
 flex-wrap: wrap;
+height: fit-content;
+
 }
 .testimonial-group.single {
 justify-content: center;
+height: fit-content;
 }
 .testimonial-card {
 flex: 1 1 45%;
 min-width: 280px;
 max-width: 700px;
+height: fit-content;
 background: rgba(255,255,255,0.1);
 border-radius: 12px;
 padding: 3rem;
@@ -1049,7 +1067,7 @@ padding: 2.5rem 1.25rem;
 padding: 0 0.875rem;
 }
 .testimonials-wrapper {
-min-height: 240px;
+min-height: 25vh;
 }
 .floating-buttons {
 right: 0.875rem;
@@ -1152,6 +1170,65 @@ bottom: 0.625rem;
 .footer-text p {
   font-size: 0.9rem;
   }
+  section h2 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+}
+.contact p {
+    font-size: clamp(1rem, 1.75vw, 1rem);
+}
+.testimonial-text {
+    font-size: 1rem;
+}
+ .hero-content h2 {
+        font-size: clamp(0.7rem, 0.9vw, 0.7rem);
+    }
+    .hero-content h2 span {
+    margin: 0 0.1rem;
+    width: 6px;
+    height: 6px;
+    }
+         .hero-content p {
+        font-size: clamp(0.8rem, 1vw, 0.8rem);
+    }
+        .hero-buttons .btn {
+        font-size: 0.8rem;
+    }
+    .hero-buttons
+    {
+    margin-top: 0.5rem;
+    }
+        .hero-content {
+        min-height: 40vh;
+    }
+}
+@media (max-width: 410px) {
+  .hero-content h1 {
+font-size: clamp(4rem, 2.5vw, 4rem);
+}
+    .hero-content p {
+        font-size: clamp(0.9rem, 1.25vw, 0.9rem);
+    }
+}
+@media (max-width: 360px) {
+  .hero-content h1 {
+font-size: clamp(3.5rem, 2.25vw, 3.5rem);
+}
+    .hero-content p {
+        font-size: clamp(0.65rem, 1vw, 0.65rem);
+    }
+    .hero-content h2 {
+        font-size: clamp(0.6rem, 0.9vw, 0.6rem);
+    }
+        .hero-buttons .btn {
+        font-size: 0.8rem;
+    }
+    .hero-buttons {
+    margin-top: 0.5rem;
+}
+    .hero-content {
+        min-height: 37.5vh;
+    }
+   
 }
 /* Accessibility */
 @media (prefers-reduced-motion: reduce) {

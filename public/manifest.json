@@ -4,7 +4,7 @@
   "icons": [
  
     {
-      "src": "./assets/logo 1.jpg",
+      "src": "./assets/logo1-noBg.png",
       "type": "image/png",
       "sizes": "192x192"
     }

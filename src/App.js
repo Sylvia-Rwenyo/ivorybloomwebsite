@@ -195,7 +195,7 @@ export default function App() {
       <nav className="navbar">
         <div className="navbar-brand">
           <div className="logo">
-            <img src="assets/logo 1.jpg" alt="Ivory Bloom Logo" />
+            <img src="assets/logo1-noBg.png" alt="Ivory Bloom Logo" />
           </div>
           <h1><b>Ivory Bloom</b></h1>
         </div>
@@ -430,7 +430,7 @@ export default function App() {
       <footer className="footer">
         <div className="footer-content">
           <img 
-            src="assets/logo 1.jpg" 
+            src="assets/logo1.jpeg" 
             alt="Ivory Bloom Logo" 
             className="footer-logo" 
           />

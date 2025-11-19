@@ -3,9 +3,12 @@
 
 class Database {
     private $host = "localhost";
+    // private $db_name = "ivorybloom_db";
+    // private $username = "root";
+    // private $password = "";
     private $db_name = "saqqaekn_ivorybloomdb";
     private $username = "saqqaekn_ivorybloomadmin";
-    private $password = "dBVkU{+~rpzen[oO";
+    private $password = "pDT*{z@WfzSw*cJR";
     private $conn;
     
     public function getConnection() {
