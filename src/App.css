@@ -131,10 +131,10 @@ font-family: 'Cinzel', serif;
 display: flex;
 align-items: center;
 justify-content: space-around;
-padding: 3rem 3rem;
+padding: 3rem;
 gap: 2rem;
-min-height: 70vh;
-position: relative;
+min-height: 50vh;
+/* position: relative; */
 overflow: hidden;
 }
 .hero::before {
@@ -167,7 +167,7 @@ z-index: 0;
 max-width: 600px;
 flex: 1;
 position: relative;
-min-height: 60vh;
+min-height: 400px;
 z-index: 2;
 }
 .hero-content h1 {
@@ -190,7 +190,7 @@ text-align: center;
 .hero-content h2 {
   font-size: clamp(0.9rem, 1vw, 0.9rem);
   color: var(--text-dark);
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   line-height: 1.4;
   font-weight: 600;
   text-align: center;
@@ -234,7 +234,7 @@ cursor: pointer;
 transition: all 0.3s ease;
 }
 .hero-content p {
-font-size: clamp(1rem, 1.25vw, 1rem);
+font-size: clamp(0.9rem, 0.6vw, 0.9rem);
 color: darkslategray;
 margin-bottom: 1rem;
 font-weight: 500;
@@ -246,9 +246,8 @@ flex-direction: row;
 justify-content: space-around;
 gap: 0.5rem;
 flex-wrap: wrap;
-margin-top: 2rem;
+margin: 4rem 0 0 10%;
 position: absolute;
-bottom: 0;
 width: 80%;
 margin-left: 10%;
 }
@@ -280,11 +279,12 @@ min-width: 350px;
 max-width: 600px;
 position: relative;
 z-index: 2;
+
 }
 .hero-image-container img {
 width: 100%;
 height: auto;
-max-height: 450px;
+max-height: 400px;
 object-fit: cover;
 border-radius: 20px;
 box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
@@ -334,7 +334,7 @@ padding: 0 1.5rem;
 /* OUR SERVICES – Screenshot layout: intro LEFT, cards RIGHT */
 .services-section {
   background: rgb(255,255,250);
-  padding: 6rem 6rem;
+  padding: 1.5rem 6rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
@@ -421,7 +421,7 @@ padding: 0 1.5rem;
 
 /* EVENTS GALLERY */
 .events-gallery {
-  background:var(--bg-light); padding:4rem 1.5rem;
+  background:var(--bg-light); padding:4rem 1rem;
 }
 .events-gallery h2 {
   text-align:center; margin-bottom:1rem;
